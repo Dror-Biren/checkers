@@ -1,0 +1,10 @@
+
+
+img {
+    border-radius: 100%;
+    /*
+    display: inline;
+    position: absolute;
+    */
+}
+

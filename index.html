@@ -1,0 +1,26 @@
+
+<html>
+  <head>
+    <title>Dror-awesome-checkers</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  
+  </head>
+  <body>
+      <image id="imgOnCursor" width='60' height='60'>
+          <div id="board">
+              <div id="title">
+              </div>
+              <!-- all images will be transplanted here by the JS code-->
+          </div>
+          <div id="menu">
+              <form>
+                  <input type="button" value="Start&#13;&#10;new game" onClick="resetGame();" />
+                  <br>
+                  <input type="button" value="Flip&#13;&#10;board" onClick='flipBoard();' />
+                  <br>
+                  <input type="button" value="Game&#13;&#10;rules" onClick="window.open('https://en.wikipedia.org/wiki/English_draughts');" />
+              </form>
+          </div>
+          <script src="index.js"></script>
+</body>
+</html>

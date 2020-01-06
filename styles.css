@@ -1,52 +1,64 @@
 
-    body {
-        background-image: url("Images/background5.jpg");
-        background-repeat: no-repeat;
-        background-size: 100% 110%;
-    }
+body {
+    background-image: url("Images/background5.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 115%;
+}
 
-    div#board {
-        width: 590px;
-        margin-left: 6%;
-        float: left;
-        display: inline;
-    }
+div#board {
+    width: 40%;
+    height: 87%;
+    margin-left: 6%;
+    float: left;
+    display: inline;
+}
 
-    div#title {
-        font-weight: 500;
-        font-size: 2em;
-        font-family: "Comic Sans MS", cursive, sans-serif;
-        color:darkslategrey;
-        margin-bottom: 5%;
-        text-align: center;
-    }
+img {
+    width: 12.5%;
+    /*height: 11%;*/
+    height: 9vmin;
+}
 
-    
+#imgOnCursor {
+    width: 4.5%;
+    height: 8.5%;
+}
+
+div#title {
+    font-weight: 500;
+    font-size: 2vmax;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    color: darkslategrey;
+    margin-bottom: 5%;
+    text-align: center;
+}
+
+
     div#title h3 {
         font-weight: 300;
         margin-top: 0.5em;
         margin-bottom: 0.1em;
     }
-    
 
-    div#menu {
-        width: 15%;       
-        float:left;
-        display: inline;
-        padding-top: 12%;
-        padding-left: 4%;
-    }
 
-    input {
-        width: 7em;
-        height: 4em;
-        font-size: 1.5em;
-        font-family:Andale Mono, monospace;
-        color:darkslategray;
-        background-color: wheat;
-        margin-bottom: 12%;
-        text-align: center;
-    }
+div#menu {
+    width: 15%;
+    float: left;
+    display: inline;
+    padding-top: 12%;
+    padding-left: 4%;
+}
+
+input {
+    width: 92%;
+    height: 11%;
+    font-size: 1.5vmax;
+    font-family: Andale Mono, monospace;
+    color: darkslategray;
+    background-color: wheat;
+    margin-bottom: 12%;
+    text-align: center;
+}
 
     input:hover {
         background-color: lightpink;

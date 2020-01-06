@@ -1,9 +1,7 @@
 const beginInPositionNum = 0;
 const boardHight = 8, boardWidth = 8;
-const amountPiecesForPlayer = 12;
 
 let board = [];
-let allClickableTiles = [];
 
 let isWhiteTurn;
 let isFirstStepOfTurn;
@@ -19,57 +17,83 @@ let imgOnCursorSize = { height: null, width: null };
 let clicked = { tile: null, prvTile: null };
 
 class Tile {
-    constructor(row, column) {
+    constructor(row, column, pieceOnTile) {
         this.row = row;
         this.column = column;
+        this.pieceOnTile = pieceOnTile;
     }
 
-    static getTileByString(tileString) {
-        let row = tileString.charAt(0);
-        let column = tileString.charAt(1);
+    static getTileByElementId(idString) {
+        let row = idString.charAt(0);
+        let column = idString.charAt(1);
+        if (isBoardUpsideDown) {
+            row = boardHight - 1 - row;
+            column = boardWidth / 2 - 1 - column;
+        }
         return board[row][column];
     }
 
-    get htmlElementId() {
-        return '' + this.row + this.column;
+    enableAllTilesPointEventExceptThis()
+    {
+        for (let tile of board.flat())
+        {
+            let pointEventStatus = (tile === this? "none" : "auto");
+            tile.htmlElement.style.pointerEvents = pointEventStatus;
+        }
+    }
+
+    get htmlElement() {
+        let displayRow = this.row, displayColumn = this.column;
+        if (isBoardUpsideDown) {
+            displayRow = boardHight - 1 - displayRow;
+            displayColumn = boardWidth / 2 - 1 - displayColumn;
+        }
+        return document.getElementById('' + displayRow + displayColumn);
     }
 
     get realColumnOfBoard() {
         return 2 * this.column + 1 - this.row % 2;
     }
 
-    get pieceOnTile() {
-        return board[this.row][this.column];
-    }
-
     get isEmpty() {
-        return !this.pieceOnTile ;
+        return this.pieceOnTile == null;
     }
 
     get imageURL() {
         if (this.isEmpty)
             return "Images/dark-tile.jpg";
         return this.pieceOnTile.imageURL;
-        
+
+    }
+
+    setImgOnCursorToTileContent() {
+        console.log("change cursor img");
+        if (this.isEmpty)
+        {
+            imgOnCursor.style.visibility = "hidden";
+            return;
+        }
+        let pieceOnCursor = Piece.copyPieceWithNewDisplay(this.pieceOnTile, pieceDisplay.ON_CURSOR);
+        imgOnCursor.src = pieceOnCursor.imageURL;
+        imgOnCursor.style.visibility = "visible";
     }
 }
 
 const pieceDisplay = {
     NORMAL: "normal",
-    GLOW: "glow",
+    //GLOW: "glow",
     INVISIBLE: "invisible",
     ON_CURSOR: "onCursur",
 }
 
-class Piece {   
+class Piece {
     constructor(isWhite, isKing = false, display = pieceDisplay.NORMAL) {
         this.isWhite = isWhite;
         this.isKing = isKing;
         this.display = display;
     }
 
-    static copyPieceWithNewDisplay(otherPiece, newDisplay)
-    {
+    static copyPieceWithNewDisplay(otherPiece, newDisplay) {
         return new Piece(otherPiece.isWhite, otherPiece.isKing, newDisplay);
     }
 
@@ -78,8 +102,8 @@ class Piece {
         switch (this.display) {
             case pieceDisplay.INVISIBLE:
                 return "Images/dark-tile.jpg";
-            case pieceDisplay.GLOW:
-                url += "glow-";
+            /* case pieceDisplay.GLOW:
+                url += "glow-"; */
             case pieceDisplay.ON_CURSOR:
                 url += "cut-";
         }
@@ -93,37 +117,22 @@ class Piece {
         url += pieceType + ".png";
         return url;
     }
-
-
-    setImgOnCursorToThis() {
-        let pieceOnCursor = copyPieceWithNewDisplay(this, pieceDisplay.ON_CURSOR);
-        imgOnCursor.src = pieceOnCursor.imageURL;
-        imgOnCursor.style.visibility = "visible";
-    }
 }
 
-
-initAllClickableTiles();
 resetImgOnCursor();
 creatAllImages();
 resetGame();
-//console.log(clicked);
-
-function initAllClickableTiles() {
-    for (let row = 0; row < boardHight; row++)
-        for (let column = 0; column < boardHight / 2; column++) {
-            allClickableTiles.push(new Tile(row, column));
-        }
-}
 
 function resetImgOnCursor() {
+    //imgOnCursor = document.getElementById("board").querySelector("#imgOnCursor");
     imgOnCursor = document.getElementById("imgOnCursor");
+    //console.log(imgOnCursor);
     imgOnCursor.style.position = "absolute";
     imgOnCursor.style.borderRadius = "100%";
     imgOnCursor.style.visibility = "hidden";
     imgOnCursor.style.pointerEvents = "none";
     document.addEventListener("mousemove", setImgPositionToCursor);
-    ({ width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
+    ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
 }
 
 function setImgPositionToCursor(event) {
@@ -135,16 +144,16 @@ function setImgPositionToCursor(event) {
 function creatAllImages() {
     let htmlCode = "";
 
-    for (let i = 0; i < boardHight; i++)
-        for (let j = 0; j < boardWidth; j++) {
-            let lineOfCode;
-            if ((i + j) % 2 === 0)
-                lineOfCode = "<image src='Images/light-tile.jpg' width='70' height='70'> ";
+    for (let row = 0; row < boardHight; row++)
+        for (let column = 0; column < boardWidth; column++) {
+            let lineOfCode = `<img style="float: left" width='' height=''`;
+            if ((row + column) % 2 === 0)
+                lineOfCode += `src='Images/light-tile.jpg' > `;
             else {
-                let column = Math.floor(j / 2);
-                let id = "" + i + column;
-                lineOfCode = `<image id='${id}' width='70' height='70';
-                onclick='tileWasClicked("${id}");'> `;
+                let columnInDataStruct = Math.floor(column / 2);
+                let id = '' + row + columnInDataStruct;
+                lineOfCode += `id='${id}' onmousedown='tileWasClicked("${id}")';
+                onmouseup='tileWasClicked("${id}");'> `;
             }
             htmlCode += lineOfCode;
         }
@@ -154,34 +163,18 @@ function creatAllImages() {
 
 function flipBoard() {
     isBoardUpsideDown = !isBoardUpsideDown;
-    let flipBoard = [];
-    for (let i = 0; i < boardHight; i++) {
-        flipBoard[i] = [];
-        for (let j = 0; j < boardWidth / 2; j++)
-            flipBoard[i][j] = board[boardHight - 1 - i][boardWidth - 1 - j];
-    }
-    board = flipBoard;
     updateBoardDisplay();
 }
-/*
-function mouseWasReleasedOnTile(tile)
-{
-    //alert(tile);
-    //if(!isFirstStepOfTurn)
-        tileWasClicked(tile);
-}
-*/
+
 function tileWasClicked(clickedTileString) {
     if (isGameOver)
         return;
+   
+    clicked.tile = Tile.getTileByElementId(clickedTileString);
+    if (!isDoubleCapture)
+        clicked.tile.setImgOnCursorToTileContent();
+    clicked.tile.enableAllTilesPointEventExceptThis();
 
-    //alert("yo");   
-    clicked.tile = Tile.getTileByString(clickedTileString);
-    
-    //console.log(clicked.tile.pieceOnTile);
-    if (clicked.tile.pieceOnTile) 
-    // why not working: if (!clicked.tile.isEmpty) ??????????
-        clicked.tile.pieceOnTile.setImgOnCursorToThis();
     executeClick();
 }
 
@@ -191,7 +184,8 @@ function executeClick() {
         getFirstStepMoveLegality() :
         getSecondStepMoveLegality();
     if (move instanceof IllegalMove) {
-        imgOnCursor.style.visibility = "hidden";
+        if (!isDoubleCapture)
+            imgOnCursor.style.visibility = "hidden";
         move.explainErrorToUser();
         if (!isDoubleCapture)
             setTurnToFirstStep();
@@ -217,14 +211,17 @@ function writeInstructionsForNextClick() {
         writeDocSubTitle("Please select a piece to " + action + " with");
     }
     else
-        writeDocSubTitle("Please move to a destination tile");
+        if (isDoubleCapture)
+            writeDocSubTitle("Please capture again");
+        else
+            writeDocSubTitle("Please move to a destination tile");
 }
 
 function setTurnToFirstStep() {
     if (isFirstStepOfTurn)
         return;
-    
-    clicked.prvTile.pieceOnTile = Piece.copyPieceWithNewDisplay(clicked.prvPiece, pieceDisplay.NORMAL);
+
+    clicked.prvTile.pieceOnTile = Piece.copyPieceWithNewDisplay(clicked.prvTile.pieceOnTile, pieceDisplay.NORMAL);
     updateBoardDisplay();
     isFirstStepOfTurn = true;
 }
@@ -248,27 +245,23 @@ function getFirstStepMoveLegality(hypothClicked = clicked) {
 }
 
 function getSecondStepMoveLegality(hypothClicked = clicked) {
-    if (hypothClicked.tile.pieceOnTile) 
-        return new IllegalMove("This tile is occupied. \n"+
-        "You need to move to an empty tile.");
+    if (hypothClicked.tile.pieceOnTile)
+        return new IllegalMove("This tile is occupied. \n" +
+            "You need to move to an empty tile.");
     return getMovementLegality(hypothClicked)
 }
 
 function getMovementLegality(hypothClicked) {
-    var deltaRow, deltaColumn = Math.abs(hypothClicked.tile.realColumn - hypothClicked.prvTile.realColumn);
+    let deltaColumn = Math.abs(hypothClicked.tile.realColumnOfBoard - hypothClicked.prvTile.realColumnOfBoard);
+    var deltaRow;
     setDeltaRow();
     function setDeltaRow() {
         deltaRow = hypothClicked.tile.row - hypothClicked.prvTile.row;
-        if (getTypeOfPiece(hypothClicked.prvPiece) === "king")
+        if (isWhiteTurn)
+            deltaRow = -deltaRow;
+        if (hypothClicked.prvTile.pieceOnTile.isKing)
             deltaRow = Math.abs(deltaRow);
-        else {
-            if (isWhiteTurn)
-                deltaRow = -deltaRow;
-            if (isBoardUpsideDown)
-                deltaRow = -deltaRow;
-        }
     }
-    alert(deltaRow);
     if (deltaRow != deltaColumn)
         return new IllegalMove("You can only move diagonally forward.");
     if (deltaRow !== 1 && deltaRow !== 2)
@@ -303,14 +296,10 @@ function getTileBetweenTiles(tile1, tile2) {
 
 const floorAvrg = (a, b) => Math.floor((a + b) / 2);
 
-function setPiece(tile, piece) {
-    board[tile.row][tile.column] = piece;
-}
 
 function resetGame() {
     isWhiteTurn = isFirstStepOfTurn = true;
     isGameOver = isBoardUpsideDown = isCapturePossible = isDoubleCapture = false;
-    amountBlackPieces = amountWhitePieces = amountPiecesForPlayer;
 
     imgOnCursor.style.visibility = "hidden";
     writeDocTitle("White player: you start!");
@@ -321,57 +310,110 @@ function resetGame() {
 }
 
 function updateBoardDisplay() {
-    for (let tile of allClickableTiles)
-        document.getElementById(tile.htmlElementId).src = tile.imageURL;
+    for (let tile of board.flat())
+        tile.htmlElement.src = tile.imageURL;
 }
 
 function setBoardToStratingPosition() {
-    board[0] = [new Piece(false), new Piece(false), new Piece(false), new Piece(false)];
-    board[1] = [new Piece(false), new Piece(false), new Piece(false), new Piece(false)];
-    board[2] = [new Piece(false), new Piece(false), new Piece(false), new Piece(false)];
-    board[3] = [null, null, null, null];
-    board[4] = [null, null, null, null];
-    board[5] = [new Piece(true), new Piece(true), new Piece(true), new Piece(true)];
-    board[6] = [new Piece(true), new Piece(true), new Piece(true), new Piece(true)];
-    board[7] = [new Piece(true), new Piece(true), new Piece(true), new Piece(true)];
-
-    /*
-    let boardInString = '';
+    let boardInCharsCode = [];
     switch (beginInPositionNum) {
         default:
-            boardInString = " b b b b" +
-                            "b b b b " +
-                            " b b b b" +
-                            "        " +
-                            "        " +
-                            "w w w w " +
-                            " w w w w" +
-                            "w w w w ";
+            boardInCharsCode[0] = ['b', 'b', 'b', 'b'];
+            boardInCharsCode[1] = ['b', 'b', 'b', 'b'];
+            boardInCharsCode[2] = ['b', 'b', 'b', 'b'];
+            boardInCharsCode[3] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[4] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[5] = ['w', 'w', 'w', 'w'];
+            boardInCharsCode[6] = ['w', 'w', 'w', 'w'];
+            boardInCharsCode[7] = ['w', 'w', 'w', 'w'];
+            break;
+        case 1:
+            boardInCharsCode[0] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[1] = ['w', 'b', 'w', 'w'];
+            boardInCharsCode[2] = ['w', ' ', ' ', ' '];
+            boardInCharsCode[3] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[4] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[5] = [' ', 'b', 'b', ' '];
+            boardInCharsCode[6] = [' ', 'w', 'w', 'b'];
+            boardInCharsCode[7] = [' ', ' ', ' ', ' '];
+            break;
+        case 2:
+            boardInCharsCode[0] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[1] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[2] = [' ', 'B', ' ', ' '];
+            boardInCharsCode[3] = [' ', 'w', ' ', 'b'];
+            boardInCharsCode[4] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[5] = [' ', ' ', 'b', ' '];
+            boardInCharsCode[6] = [' ', 'w', ' ', ' '];
+            boardInCharsCode[7] = [' ', ' ', ' ', ' '];
+            break;
+        case 3:
+            boardInCharsCode[0] = [' ', ' ', ' ', 'b'];
+            boardInCharsCode[1] = ['W', ' ', ' ', 'w'];
+            boardInCharsCode[2] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[3] = [' ', ' ', 'w', ' '];
+            boardInCharsCode[4] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[5] = [' ', 'w', ' ', ' '];
+            boardInCharsCode[6] = [' ', ' ', ' ', ' '];
+            boardInCharsCode[7] = [' ', ' ', ' ', ' '];
             break;
     }
-    */
+    for (let row = 0; row < boardHight; row++) {
+        board[row] = [];
+        for (let column = 0; column < boardWidth / 2; column++) {
+            let curPiece = null;
+            switch (boardInCharsCode[row][column]) {
+                case 'b':
+                    curPiece = new Piece(false);
+                    break;
+                case 'w':
+                    curPiece = new Piece(true);
+                    break;
+                case 'B':
+                    curPiece = new Piece(false, true);
+                    break;
+                case 'W':
+                    curPiece = new Piece(true, true);
+                    break;
+
+            }
+            board[row][column] = new Tile(row, column, curPiece);
+        }
+    }
+
 }
 
-function isCapturePossibleNow(prvMovingPiece) {
-    for (let i = 0; i < allClickableTiles.length; i++) {
+function isCapturePossibleNow(tileOfPrvCapturingPiece = null) {
+    let allLegalMove = getAllLegalMoveArr();
+    for (let move of allLegalMove)
+        if (move.tileOfCapture !== null)
+            if (!tileOfPrvCapturingPiece || 
+                move.hypothClicked.prvTile == tileOfPrvCapturingPiece)
+                return true;
+    return false;
+}
+
+function getAllLegalMoveArr() {
+    let allLegalMoveArr = [];
+    let flatBoard = board.flat();
+    for (let i = 0; i < flatBoard.length; i++) {
         let hypothClicked1 = Object.create(clicked);
-        hypothClicked1.tile = Object.assign(allClickableTiles[i]);
+        hypothClicked1.tile = flatBoard[i];
         let legality1 = getFirstStepMoveLegality(hypothClicked1);
         if (legality1 instanceof LegalFirstStepMove)
-            for (let j = 0; j < allClickableTiles.length; j++) {
+            for (let j = 0; j < flatBoard.length; j++) {
                 let hypothClicked2 = Object.create(clicked);
-                hypothClicked2.prvTile = Object.assign(hypothClicked1.tile);
-                hypothClicked2.tile = Object.assign(allClickableTiles[j]);
+                hypothClicked2.prvTile = hypothClicked1.tile;
+                hypothClicked2.tile = flatBoard[j];
                 let legality2 = getSecondStepMoveLegality(hypothClicked2);
-                if (legality2 instanceof LegalSecondStepMove && legality2.tileOfCapture !== null) {
-                    if (prvMovingPiece === null || 
-                        ((clicked.tile.row === hypothClicked2.prvTile.row) && 
-                        (clicked.tile.column === hypothClicked2.prvTile.column)))
-                        return true;
+                if (legality2 instanceof LegalSecondStepMove)
+                {
+                    legality2.hypothClicked = hypothClicked2;
+                    allLegalMoveArr.push(legality2);
                 }
             }
     }
-    return false;
+    return allLegalMoveArr;
 }
 
 class IllegalMove {
@@ -394,19 +436,23 @@ class IllegalMove {
 
 class LegalFirstStepMove {
     executStep() {
+        //clicked.tile.enableAllTilesPointEventExceptThis();
+        clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
         clicked.prvTile = Object.assign(clicked.tile);
-        setPiece(clicked.tile, clicked.prvPiece);
+        clicked.tile.pieceOnTile = clicked.prvTile.pieceOnTile;
     }
 }
 
 class LegalSecondStepMove {
     constructor(tileOfCapture) {
-        this.tileOfCapture = Object.assign(tileOfCapture);
+        this.tileOfCapture = tileOfCapture;
     }
 
     executStep() {
         this.executeMovementOnBoard();
         this.setUpForNextTurn();
+        if (!isDoubleCapture)
+            imgOnCursor.style.visibility = "hidden";
     }
 
     setUpForNextTurn() {
@@ -416,49 +462,38 @@ class LegalSecondStepMove {
             if (this.isNoMoreLegalMove())
                 this.endTheGame();
             else
-                isCapturePossible = isCapturePossibleNow(null);
+                isCapturePossible = isCapturePossibleNow();
         }
         else {
-            isDoubleCapture = true;
-            clicked.prvTile = Object.assign(clicked.tile);
-            setPiece(clicked.prvTile, clicked.prvPiece);
+            isCapturePossible = isDoubleCapture = true;
+            clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
+            clicked.prvTile = clicked.tile;
+            clicked.tile.setImgOnCursorToTileContent();
+            //clicked.tile.pieceOnTile.display = pieceDisplay.GLOW;
         }
     }
 
     executeMovementOnBoard() {
-        this.crownIfNeeded(clicked.prvPiece);
-        setPiece(clicked.tile, clicked.prvPiece);
-        setPiece(clicked.prvTile, null);
+        this.crownIfNeeded();
+        clicked.tile.pieceOnTile = clicked.prvTile.pieceOnTile;
+        clicked.tile.pieceOnTile.display = pieceDisplay.NORMAL;
+        clicked.prvTile.pieceOnTile = null;
         if (this.tileOfCapture !== null)
-            setPiece(this.tileOfCapture, null);
+            this.tileOfCapture.pieceOnTile = null;
     }
 
-    crownIfNeeded(piece) {
+    crownIfNeeded() {
         let row = clicked.tile.row;
-        piece.isKing = row === '0' || row === '7';
+        if (row == 0 || row == boardHight - 1)
+            clicked.prvTile.pieceOnTile.isKing = true;
     }
 
     isTurnOver() {
-        return this.tileOfCapture === null || !isCapturePossibleNow(clicked.piece);
+        return this.tileOfCapture === null || !isCapturePossibleNow(clicked.tile);
     }
 
     isNoMoreLegalMove() {
-        for (let i = 0; i < allClickableTiles.length; i++) {
-            let hypothClicked1 = Object.create(clicked);
-            hypothClicked1.tile = Object.assign(allClickableTiles[i]);
-            let legality1 = getFirstStepMoveLegality(hypothClicked1);
-            if (legality1 instanceof LegalFirstStepMove) {
-                let hypothClicked2 = Object.create(clicked);
-                hypothClicked2.prvTile = Object.assign(hypothClicked1.tile);
-                for (let j = 0; j < allClickableTiles.length; j++) {
-                    hypothClicked2.tile = Object.assign(allClickableTiles[j]);
-                    let legality2 = getSecondStepMoveLegality(hypothClicked2);
-                    if (legality2 instanceof LegalSecondStepMove)
-                        return false;
-                }
-            }
-        }
-        return true;
+        return getAllLegalMoveArr().length === 0;
     }
 
     endTheGame() {

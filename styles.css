@@ -1,13 +1,14 @@
 
 body {
     background-image: url("Images/background5.jpg");
+    background-position: 0 0;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-size: 100% 115%;
+    /* background-size: 100% 115%; */
 }
 
 div#board {
-    width: 40%;
-    height: 87%;
+    width: 70vmin;
     margin-left: 6%;
     float: left;
     display: inline;
@@ -15,18 +16,12 @@ div#board {
 
 img {
     width: 12.5%;
-    /*height: 11%;*/
     height: 9vmin;
-}
-
-#imgOnCursor {
-    width: 4.5%;
-    height: 8.5%;
 }
 
 div#title {
     font-weight: 500;
-    font-size: 2vmax;
+    font-size: 3.8vmin;
     font-family: "Comic Sans MS", cursive, sans-serif;
     color: darkslategrey;
     margin-bottom: 5%;
@@ -34,25 +29,26 @@ div#title {
 }
 
 
-    div#title h3 {
-        font-weight: 300;
-        margin-top: 0.5em;
-        margin-bottom: 0.1em;
-    }
+div#title h3 {
+   font-weight: 300;
+   margin-top: 0.5em;
+   margin-bottom: 0.1em;
+}
 
 
 div#menu {
-    width: 15%;
+    width: 12%;
+    height: 60%;
     float: left;
     display: inline;
-    padding-top: 12%;
+    padding-top: 19vmin;
     padding-left: 4%;
 }
 
 .menuButton {
-    font-size: 3vmin;
+    font-size: 2.3vmin;
     font-family: Andale Mono, monospace;
-    width: 60%;
+    width: 48%;
     height: 10%;
     color: darkslategray;
     background-color: wheat;
@@ -61,9 +57,9 @@ div#menu {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 5%;
+    padding: 13%;
     border: 0.5vmin groove Peru;
-    border-radius: 25%;
+    border-radius: 30%;
 }
 
 .menuButton:hover {

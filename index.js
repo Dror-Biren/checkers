@@ -1,5 +1,5 @@
 const beginInPositionNum = 0;
-const boardHight = 8, boardWidth = 8;
+const boardHeight = 8, boardWidth = 8;
 
 let board = [];
 
@@ -27,7 +27,7 @@ class Tile {
         let row = idString.charAt(0);
         let column = idString.charAt(1);
         if (isBoardUpsideDown) {
-            row = boardHight - 1 - row;
+            row = boardHeight - 1 - row;
             column = boardWidth / 2 - 1 - column;
         }
         return board[row][column];
@@ -45,11 +45,17 @@ class Tile {
     get htmlElement() {
         let displayRow = this.row, displayColumn = this.column;
         if (isBoardUpsideDown) {
-            displayRow = boardHight - 1 - displayRow;
+            displayRow = boardHeight - 1 - displayRow;
             displayColumn = boardWidth / 2 - 1 - displayColumn;
         }
         return document.getElementById('' + displayRow + displayColumn);
     }
+
+    /*
+    get nextEmptyTileHtmlElement() {
+        return document.getElementById('empty-' + this.row + this.column);
+    }
+    */
 
     get realColumnOfBoard() {
         return 2 * this.column + 1 - this.row % 2;
@@ -75,8 +81,8 @@ class Tile {
         }
         let pieceOnCursor = Piece.copyPieceWithNewDisplay(this.pieceOnTile, pieceDisplay.ON_CURSOR);
         imgOnCursor.src = pieceOnCursor.imageURL;
-        imgOnCursor.style.visibility = "visible";      
-        updateImgOnCursorSize();
+        imgOnCursor.style.visibility = "visible";
+        updateImgOnCursorSize();      
     }
 }
 
@@ -123,6 +129,18 @@ class Piece {
 resetImgOnCursor();
 creatAllImages();
 resetGame();
+updateImgOnCursorSize();
+
+/*
+function updateHtmlElementsSize() {
+    
+    for (let tile of board.flat())
+        tile.htmlElement.style.height = tile.nextEmptyTileHtmlElement.style.height = tile.htmlElement.offsetWidth+"px";
+    console.log(board[0][0].htmlElement.offsetWidth);
+    imgOnCursor.style.height = imgOnCursor.style.width = board[0][0].htmlElement.offsetWidth+"px";
+    ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
+}
+*/
 
 function resetImgOnCursor() {
     //imgOnCursor = document.getElementById("board").querySelector("#imgOnCursor");
@@ -136,28 +154,29 @@ function resetImgOnCursor() {
     document.addEventListener("mousedown", setImgPositionToCursor);
 }
 
-function updateImgOnCursorSize()
-{
-    ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
-}
-
 function setImgPositionToCursor(event) {
     imgOnCursor.style.top = (event.clientY - imgOnCursorSize.height / 2) + "px";
     imgOnCursor.style.left = (event.clientX - imgOnCursorSize.width / 2) + "px";
 }
 
+function updateImgOnCursorSize()
+{
+    imgOnCursor.style.height = imgOnCursor.style.width = board[0][0].htmlElement.offsetWidth+"px";
+    ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
+}
 
 function creatAllImages() {
     let htmlCode = "";
 
-    for (let row = 0; row < boardHight; row++)
+    for (let row = 0; row < boardHeight; row++)
         for (let column = 0; column < boardWidth; column++) {
-            let lineOfCode = `<img style="float: left" width='' height=''`;
+            let lineOfCode = `<img style="float: left" width='' height='' `;
+
+            let columnInDataStruct = Math.floor(column / 2);
+            let id = '' + row + columnInDataStruct;
             if ((row + column) % 2 === 0)
-                lineOfCode += `src='Images/light-tile.jpg' > `;
+                lineOfCode += `id='empty-${id}' src='Images/light-tile.jpg' > `;
             else {
-                let columnInDataStruct = Math.floor(column / 2);
-                let id = '' + row + columnInDataStruct;
                 lineOfCode += `id='${id}' onmousedown='tileWasClicked("${id}")';
                 onmouseup='tileWasClicked("${id}");'> `;
             }
@@ -312,7 +331,7 @@ function resetGame() {
     writeDocSubTitle("Please select a piece to move with");
     setBoardToStratingPosition();
     updateBoardDisplay();
-    alert("Let's play checkers!");
+    //alert("Let's play checkers!");
 }
 
 function updateBoardDisplay() {
@@ -364,7 +383,7 @@ function setBoardToStratingPosition() {
             boardInCharsCode[7] = [' ', ' ', ' ', ' '];
             break;
     }
-    for (let row = 0; row < boardHight; row++) {
+    for (let row = 0; row < boardHeight; row++) {
         board[row] = [];
         for (let column = 0; column < boardWidth / 2; column++) {
             let curPiece = null;
@@ -490,7 +509,7 @@ class LegalSecondStepMove {
 
     crownIfNeeded() {
         let row = clicked.tile.row;
-        if (row == 0 || row == boardHight - 1)
+        if (row == 0 || row == boardHeight - 1)
             clicked.prvTile.pieceOnTile.isKing = true;
     }
 

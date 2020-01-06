@@ -6,21 +6,32 @@
   
   </head>
   <body>
-      <image id="imgOnCursor" width='60' height='60'>
+      <image id="imgOnCursor" width='0' height='0'>
           <div id="board">
               <div id="title">
               </div>
               <!-- all images will be transplanted here by the JS code-->
           </div>
           <div id="menu">
-              <form>
-                  <!--&#13;&#10;-->
-                  <input type="button" value="Start new game" onClick="resetGame();" />
-                  <br>
-                  <input type="button" value="Flip board" onClick='flipBoard();' />
-                  <br>
-                  <input type="button" value="Game rules" onClick="window.open('https://en.wikipedia.org/wiki/English_draughts');" />
-              </form>
+              <div class='menuButton' onclick="resetGame();">
+                  Start new game
+              </div>
+              <div class='menuButton' onclick="flipBoard();">
+                  Flip board
+              </div>
+              <div class='menuButton' onclick="window.open('https://en.wikipedia.org/wiki/English_draughts');">
+                  Game rules
+              </div>
+              <!--
+            <form>
+                // &#13;&#10;
+                <input type="button" value="Start new game" onClick="resetGame();" />
+                <br>
+               <input type="button" value="Flip board" onClick='flipBoard();' />
+                <br>
+                <input type="button" value="Game rules" onClick="window.open('https://en.wikipedia.org/wiki/English_draughts');" />
+                 </form>
+              -->
           </div>
           <script src="index.js"></script>
 </body>

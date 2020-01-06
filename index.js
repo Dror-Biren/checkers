@@ -12,7 +12,7 @@ let isCapturePossible;
 let isDoubleCapture;
 
 let imgOnCursor;
-let imgOnCursorSize = { height: null, width: null };
+let imgOnCursorSize = { height: 0, width: 0};
 
 let clicked = { tile: null, prvTile: null };
 
@@ -67,7 +67,7 @@ class Tile {
     }
 
     setImgOnCursorToTileContent() {
-        console.log("change cursor img");
+        //console.log("change cursor img");
         if (this.isEmpty)
         {
             imgOnCursor.style.visibility = "hidden";
@@ -75,7 +75,8 @@ class Tile {
         }
         let pieceOnCursor = Piece.copyPieceWithNewDisplay(this.pieceOnTile, pieceDisplay.ON_CURSOR);
         imgOnCursor.src = pieceOnCursor.imageURL;
-        imgOnCursor.style.visibility = "visible";
+        imgOnCursor.style.visibility = "visible";      
+        updateImgOnCursorSize();
     }
 }
 
@@ -132,6 +133,11 @@ function resetImgOnCursor() {
     imgOnCursor.style.visibility = "hidden";
     imgOnCursor.style.pointerEvents = "none";
     document.addEventListener("mousemove", setImgPositionToCursor);
+    document.addEventListener("mousedown", setImgPositionToCursor);
+}
+
+function updateImgOnCursorSize()
+{
     ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
 }
 

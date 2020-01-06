@@ -49,21 +49,31 @@ div#menu {
     padding-left: 4%;
 }
 
-input {
-    width: 92%;
-    height: 11%;
-    font-size: 1.5vmax;
+.menuButton {
+    font-size: 3vmin;
     font-family: Andale Mono, monospace;
+    width: 60%;
+    height: 10%;
     color: darkslategray;
     background-color: wheat;
     margin-bottom: 12%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    padding: 5%;
+    border: 0.5vmin groove Peru;
+    border-radius: 25%;
 }
 
-    input:hover {
-        background-color: lightpink;
-    }
+.menuButton:hover {
+    background-color: lightpink;
+    cursor: pointer;
+}
 
+.menuButton:active {
+   background-color: indianred;
+}
 
 
 /*

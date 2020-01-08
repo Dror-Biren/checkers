@@ -19,6 +19,26 @@ img {
     height: 9vmin;
 }
 
+    img.darkTile:hover {
+        filter: hue-rotate(-70deg);
+    }
+/*
+    img.darkTile:hover {
+        cursor: grab;
+    }
+
+
+    img.darkTile {
+        cursor: grabbing;
+    }
+*/
+
+
+#imgOnCursor {
+    z-index: 99;
+    
+}
+
 div#title {
     font-weight: 500;
     font-size: 3.8vmin;
@@ -29,11 +49,11 @@ div#title {
 }
 
 
-div#title h3 {
-   font-weight: 300;
-   margin-top: 0.5em;
-   margin-bottom: 0.1em;
-}
+    div#title h3 {
+        font-weight: 300;
+        margin-top: 0.5em;
+        margin-bottom: 0.1em;
+    }
 
 
 div#menu {
@@ -46,10 +66,10 @@ div#menu {
 }
 
 .menuButton {
-    font-size: 2.3vmin;
+    font-size: 2.5vmin;
     font-family: Andale Mono, monospace;
-    width: 48%;
-    height: 10%;
+    width: 11vmin;
+    height: 4vmin;
     color: darkslategray;
     background-color: wheat;
     margin-bottom: 12%;
@@ -62,14 +82,19 @@ div#menu {
     border-radius: 30%;
 }
 
-.menuButton:hover {
-    background-color: lightpink;
-    cursor: pointer;
-}
+    .menuButton:hover {
+        font-size: 2.8vmin;
+        font-weight: 900;
+        background-color: lightpink;
+        cursor: pointer;
+        width: 13vmin;
+        height: 5vmin;
+        border: 0.5vmin groove saddlebrown;
+    }
 
-.menuButton:active {
-   background-color: indianred;
-}
+    .menuButton:active {
+        background-color: indianred;
+    }
 
 
 /*

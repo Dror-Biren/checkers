@@ -10,25 +10,30 @@ PrepareGame.prepareGame = function() {
 }
 
 PrepareGame.creatAllImages = function() {
-    let htmlCode = "";
-
     for (let row = 0; row < boardHeight; row++)
         for (let column = 0; column < boardWidth; column++) {
-            let lineOfCode = `<img style="float: left" width='' height='' `;
+            let tileImg = document.createElement("img");
+            tileImg.style.float = "left";
+
+            //let lineOfCode = `<img style="float: left" width='' height='' `;
 
             let columnInDataStruct = Math.floor(column / 2);
             let id = '' + row + columnInDataStruct;
-            if ((row + column) % 2 === 0)
+            if ((row + column) % 2 === 0) {
                 //id='empty-${id}'
-                 lineOfCode += `src='Images/light-tile.jpg' > `;
-            else {
-                lineOfCode += `id='${id}' class='darkTile' onmousedown='Index.tileWasClicked("${id}")';
-                onmouseup='Index.tileWasClicked("${id}");'> `;
+                 //lineOfCode += `src='Images/light-tile.jpg' > `;
+                 tileImg.src = "Images/light-tile.jpg";
+                 console.log(tileImg.src);
+                 tileImg.id = id; 
             }
-            htmlCode += lineOfCode;
+            else {
+                //lineOfCode += `id='${id}' class='darkTile' onmousedown='Index.tileWasClicked("${id}")';
+                //onmouseup='Index.tileWasClicked("${id}");'> `;
+            }
+            document.getElementById("board").appendChild(tileImg);
         }
 
-    document.getElementById("board").innerHTML += htmlCode;
+    
 }
 
 PrepareGame.resetGame = function() {

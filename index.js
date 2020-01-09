@@ -3,6 +3,9 @@ let Index = {};
 
 const beginInPositionNum = 0;
 const boardHeight = 8 , boardWidth = 8;
+const imgsFolderName = "Images";
+const darkTileUrl = "Images/dark-tile.jpg";
+const pieceImgsUrlSuffix = ".png";
 
 let board = [];
 let clicked = { tile: null, prvTile: null };
@@ -16,6 +19,8 @@ let isDoubleCapture;
 
 let imgOnCursor;
 let imgOnCursorSize = { height: 0, width: 0};
+
+
 
 Index.flipBoard = function () {
     isBoardUpsideDown = !isBoardUpsideDown;

@@ -31,7 +31,7 @@ CalcMoveLegality.getSecondStepMoveLegality = function (hypothClicked = clicked) 
         return new IllegalMove("You can't move that horizontal distance.");
 
     if (deltaRow === 2)
-        return getAttemptCaptureLegality(hypothClicked);
+        return CalcMoveLegality.getAttemptCaptureLegality(hypothClicked);
 
     if (isCapturePossible)
         return new IllegalMove("When you can capture, you must capture.");
@@ -40,7 +40,7 @@ CalcMoveLegality.getSecondStepMoveLegality = function (hypothClicked = clicked) 
 }
 
 CalcMoveLegality.getAttemptCaptureLegality = function (hypothClicked) {
-    let tileBetween = getTileBetweenTiles(hypothClicked.tile, hypothClicked.prvTile);
+    let tileBetween = CalcMoveLegality.getTileBetweenTiles(hypothClicked.tile, hypothClicked.prvTile);
     if (tileBetween.isEmpty)
         return new IllegalMove("You can't move a double move unless you capture.");
     if (isWhiteTurn === tileBetween.pieceOnTile.isWhite)

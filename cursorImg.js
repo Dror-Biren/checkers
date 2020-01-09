@@ -1,8 +1,5 @@
 let CursorImg = {};
 
-CursorImg.imgOnCursor;
-CursorImg.imgOnCursorSize = { height: 0, width: 0};
-
 CursorImg.resetImgOnCursor = function () {
     //imgOnCursor = document.getElementById("board").querySelector("#imgOnCursor");
     imgOnCursor = document.getElementById("imgOnCursor");
@@ -10,8 +7,8 @@ CursorImg.resetImgOnCursor = function () {
     imgOnCursor.style.borderRadius = "100%";
     imgOnCursor.style.visibility = "hidden";
     imgOnCursor.style.pointerEvents = "none";
-    document.addEventListener("mousemove", setImgPositionToCursor);
-    document.addEventListener("mousedown", setImgPositionToCursor);
+    document.addEventListener("mousemove", CursorImg.setImgPositionToCursor);
+    document.addEventListener("mousedown", CursorImg.setImgPositionToCursor);
 }
 
 CursorImg.setImgPositionToCursor = function (event) {
@@ -35,5 +32,5 @@ CursorImg.setImgOnCursorToTileContent = function(tile) {
     let pieceOnCursor = tile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.ON_CURSOR);
     imgOnCursor.src = pieceOnCursor.imageURL;
     imgOnCursor.style.visibility = "visible";
-    updateImgOnCursorSize();      
+    CursorImg.updateImgOnCursorSize();      
 }

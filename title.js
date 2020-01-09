@@ -7,16 +7,16 @@ Title.writeInstructionsForNextClick = function() {
         return;
     }
 
-    writeDocTitle((isWhiteTurn ? "White" : "Black") + " player:");
+    Title.writeDocTitle((isWhiteTurn ? "White" : "Black") + " player:");
     if (isFirstStepOfTurn) {
         let action = isCapturePossible ? "capture" : "move";
-        writeDocSubTitle("Please select a piece to " + action + " with");
+        Title.writeDocSubTitle("Please select a piece to " + action + " with");
     }
     else
         if (isDoubleCapture)
-            writeDocSubTitle("Please capture again");
+            Title.writeDocSubTitle("Please capture again");
         else
-            writeDocSubTitle("Please move to a destination tile");
+            Title.writeDocSubTitle("Please move to a destination tile");
 }
 
 Title.writeDocTitle = function(message) {

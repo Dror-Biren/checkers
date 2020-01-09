@@ -1,5 +1,7 @@
 let PrepareGame = {};
 
+
+
 PrepareGame.prepareGame = function() {
     CursorImg.resetImgOnCursor();
     PrepareGame.creatAllImages();
@@ -20,8 +22,8 @@ PrepareGame.creatAllImages = function() {
                 //id='empty-${id}'
                  lineOfCode += `src='Images/light-tile.jpg' > `;
             else {
-                lineOfCode += `id='${id}' class='darkTile' onmousedown='tileWasClicked("${id}")';
-                onmouseup='tileWasClicked("${id}");'> `;
+                lineOfCode += `id='${id}' class='darkTile' onmousedown='Index.tileWasClicked("${id}")';
+                onmouseup='Index.tileWasClicked("${id}");'> `;
             }
             htmlCode += lineOfCode;
         }
@@ -39,6 +41,7 @@ PrepareGame.resetGame = function() {
     Title.writeDocTitle("White player: you start!");
     Title.writeDocSubTitle("Please select a piece to move with");
     PrepareGame.setBoardToStartingPosition();
+    //console.log(Index);
     Index.updateBoardDisplay();
     //alert("Let's play checkers!");
 }
@@ -93,7 +96,7 @@ PrepareGame.setBoardToStartingPosition = function() {
 
 PrepareGame.setRealBoardByCodeBoard = function(codeBoard) {
     for (let row = 0; row < boardHeight; row++) {
-        Index.board[row] = [];
+        board[row] = [];
         for (let column = 0; column < boardWidth / 2; column++) {
             let curPiece = null;
             switch (codeBoard[row][column]) {
@@ -110,7 +113,7 @@ PrepareGame.setRealBoardByCodeBoard = function(codeBoard) {
                     curPiece = new Piece(true, true);
                     break;
             }
-            Index.board[row][column] = new Tile(row, column, curPiece);
+            board[row][column] = new Tile(row, column, curPiece);
         }
     }
 }

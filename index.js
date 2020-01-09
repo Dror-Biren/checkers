@@ -1,27 +1,25 @@
 
 let Index = {};
 
-Index.beginInPositionNum = 0;
-Index.boardHeight = 8;
-Index.boardWidth = 8;
+const beginInPositionNum = 0;
+const boardHeight = 8 , boardWidth = 8;
 
-Index.board = [];
+let board = [];
+let clicked = { tile: null, prvTile: null };
 
-Index.isWhiteTurn;
-Index.isFirstStepOfTurn;
-Index.isGameOver;
-Index.isBoardUpsideDown;
+let isWhiteTurn;
+let isFirstStepOfTurn;
+let isGameOver;
+let isBoardUpsideDown;
+let isCapturePossible;
+let isDoubleCapture;
 
-Index.isCapturePossible;
-Index.isDoubleCapture;
-
-Index.clicked = { tile: null, prvTile: null };
-
-PrepareGame.prepareGame();
+let imgOnCursor;
+let imgOnCursorSize = { height: 0, width: 0};
 
 Index.flipBoard = function () {
     isBoardUpsideDown = !isBoardUpsideDown;
-    updateBoardDisplay();
+    Index.updateBoardDisplay();
 }
 
 Index.tileWasClicked = function(clickedTileString) {
@@ -31,16 +29,16 @@ Index.tileWasClicked = function(clickedTileString) {
 
     clicked.tile = Tile.getTileByElementId(clickedTileString);
     if (!isDoubleCapture)
-        setImgOnCursorToTileContent(clicked.tile);
+        CursorImg.setImgOnCursorToTileContent(clicked.tile);
     clicked.tile.enableAllTilesPointEventExceptThis();
 
-    executeClick();
+    Index.executeClick();
 }
 
 Index.executeClick = function() {
     let move = isFirstStepOfTurn ?
-        getFirstStepMoveLegality() :
-        getSecondStepMoveLegality();
+        CalcMoveLegality.getFirstStepMoveLegality() :
+        CalcMoveLegality.getSecondStepMoveLegality();
     if (move instanceof IllegalMove) {
         if (!isDoubleCapture) {
             imgOnCursor.style.visibility = "hidden";
@@ -48,14 +46,14 @@ Index.executeClick = function() {
         }
         move.explainErrorToUser();
         if (!isDoubleCapture)
-            setTurnToFirstStep();
+            Index.setTurnToFirstStep();
     }
     else {
         move.executStep();
-        updateBoardDisplay();
+        Index.updateBoardDisplay();
         if (!isDoubleCapture)
             isFirstStepOfTurn = !isFirstStepOfTurn;
-        writeInstructionsForNextClick();
+        Title.writeInstructionsForNextClick();
     }
 }
 
@@ -64,7 +62,7 @@ Index.setTurnToFirstStep = function() {
         return;
 
     clicked.prvTile.pieceOnTile = clicked.prvTile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.NORMAL);
-    updateBoardDisplay();
+    Index.updateBoardDisplay();
     isFirstStepOfTurn = true;
 }
 
@@ -73,6 +71,7 @@ Index.updateBoardDisplay = function() {
         tile.htmlElement.src = tile.imageURL;
 }
 
+PrepareGame.prepareGame();
 
 /*
 function updateHtmlElementsSize() {   

@@ -6,12 +6,12 @@ class IllegalMove {
     }
 
     explainErrorToUser() {
-        writeDocTitle((isWhiteTurn ? "White" : "Black") + " player- please try again:");
+        Title.writeDocTitle((isWhiteTurn ? "White" : "Black") + " player- please try again:");
         if (isDoubleCapture)
-            writeDocSubTitle("Select a destination tile");
+            Title.writeDocSubTitle("Select a destination tile");
         else {
             let action = isCapturePossible ? "capture" : "move";
-            writeDocSubTitle("Select a piece to " + action + " with");
+            Title.writeDocSubTitle("Select a piece to " + action + " with");
         }
         alert("Error!\n" + this.message);
     }
@@ -51,13 +51,13 @@ class LegalSecondStepMove {
             if (this.isNoMoreLegalMove())
                 this.endTheGame();
             else
-                isCapturePossible = isCapturePossibleNow();
+                isCapturePossible = MoveClasses.isCapturePossibleNow();
         }
         else {
             isCapturePossible = isDoubleCapture = true;
             clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
             clicked.prvTile = clicked.tile;
-            setImgOnCursorToTileContent(clicked.tile);
+            CursorImg.setImgOnCursorToTileContent(clicked.tile);
             //clicked.tile.pieceOnTile.display = pieceDisplay.GLOW;
         }
     }
@@ -78,23 +78,23 @@ class LegalSecondStepMove {
     }
 
     isTurnOver() {
-        return this.tileOfCapture === null || !isCapturePossibleNow(clicked.tile);
+        return this.tileOfCapture === null || !MoveClasses.isCapturePossibleNow(clicked.tile);
     }
 
     isNoMoreLegalMove() {
-        return getAllLegalMoveArr().length === 0;
+        return MoveClasses.getAllLegalMoveArr().length === 0;
     }
 
     endTheGame() {
         isGameOver = true;
         let colorWin = isWhiteTurn ? "Black" : "White";
-        writeDocTitle(colorWin + " player won!");
-        writeDocSubTitle("Congratulations.");
+        Title.writeDocTitle(colorWin + " player won!");
+        Title.writeDocSubTitle("Congratulations.");
     }
 }
 
 MoveClasses.isCapturePossibleNow = function(tileOfPrvCapturingPiece = null) {
-    let allLegalMove = getAllLegalMoveArr();
+    let allLegalMove = MoveClasses.getAllLegalMoveArr();
     for (let move of allLegalMove)
         if (move.tileOfCapture !== null)
             if (!tileOfPrvCapturingPiece || 
@@ -109,13 +109,13 @@ MoveClasses.getAllLegalMoveArr = function() {
     for (let i = 0; i < flatBoard.length; i++) {
         let hypothClicked1 = Object.create(clicked);
         hypothClicked1.tile = flatBoard[i];
-        let legality1 = getFirstStepMoveLegality(hypothClicked1);
+        let legality1 = CalcMoveLegality.getFirstStepMoveLegality(hypothClicked1);
         if (legality1 instanceof LegalFirstStepMove)
             for (let j = 0; j < flatBoard.length; j++) {
                 let hypothClicked2 = Object.create(clicked);
                 hypothClicked2.prvTile = hypothClicked1.tile;
                 hypothClicked2.tile = flatBoard[j];
-                let legality2 = getSecondStepMoveLegality(hypothClicked2);
+                let legality2 = CalcMoveLegality.getSecondStepMoveLegality(hypothClicked2);
                 if (legality2 instanceof LegalSecondStepMove)
                 {
                     legality2.hypothClicked = hypothClicked2;

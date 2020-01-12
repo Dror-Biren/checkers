@@ -6,28 +6,35 @@ class IllegalMove {
     }
 
     explainErrorToUser() {
-        Title.writeDocTitle((isWhiteTurn ? "White" : "Black") + " player- please try again:");
-        if (isDoubleCapture)
-            Title.writeDocSubTitle("Select a destination tile");
-        else {
-            let action = isCapturePossible ? "capture" : "move";
-            Title.writeDocSubTitle("Select a piece to " + action + " with");
-        }
-        alert("Error!\n" + this.message);
+        Title.annonceIllegalMove();
+        alert(messages.ERROR.ALERT_START + this.message);
+    }
+
+   setTurnToFirstStep = function() {
+        imgOnCursor.style.visibility = "hidden";
+        prvMovingPiece.display = pieceDisplay.GLOW;
+        if (isFirstStepOfTurn)
+            return;
+     
+        document.body.style.cursor = "grab";    
+        clicked.prvTile.pieceOnTile = 
+            clicked.prvTile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.NORMAL);
+        Index.updateBoardDisplay();
+        isFirstStepOfTurn = true;
     }
 }
 
-
 class LegalFirstStepMove {
     executStep() {
+        if (prvMovingPiece)
+            prvMovingPiece.display = pieceDisplay.NORMAL;
         clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
-       // console.log(imgOnCursor.style.cursor);
-        //imgOnCursor.style.cursor = "grabbing";
         document.body.style.cursor = "grabbing";
         clicked.prvTile = Object.assign(clicked.tile);
         clicked.tile.pieceOnTile = clicked.prvTile.pieceOnTile;
     }
 }
+
 
 class LegalSecondStepMove {
     constructor(tileOfCapture) {
@@ -44,8 +51,17 @@ class LegalSecondStepMove {
         }
     }
 
+    executeMovementOnBoard() {
+        this.crownIfNeeded();
+        clicked.tile.pieceOnTile = clicked.prvTile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.GLOW);
+        clicked.prvTile.pieceOnTile = null;
+        if (this.tileOfCapture !== null)
+            this.tileOfCapture.pieceOnTile = null;
+    }
+
     setUpForNextTurn() {
         if (this.isTurnOver()) {
+            prvMovingPiece = clicked.tile.pieceOnTile;
             isCapturePossible = isDoubleCapture = false;
             isWhiteTurn = !isWhiteTurn;
             if (this.isNoMoreLegalMove())
@@ -60,15 +76,6 @@ class LegalSecondStepMove {
             CursorImg.setImgOnCursorToTileContent(clicked.tile);
             //clicked.tile.pieceOnTile.display = pieceDisplay.GLOW;
         }
-    }
-
-    executeMovementOnBoard() {
-        this.crownIfNeeded();
-        clicked.tile.pieceOnTile = clicked.prvTile.pieceOnTile;
-        clicked.tile.pieceOnTile.display = pieceDisplay.NORMAL;
-        clicked.prvTile.pieceOnTile = null;
-        if (this.tileOfCapture !== null)
-            this.tileOfCapture.pieceOnTile = null;
     }
 
     crownIfNeeded() {
@@ -87,9 +94,7 @@ class LegalSecondStepMove {
 
     endTheGame() {
         isGameOver = true;
-        let colorWin = isWhiteTurn ? "Black" : "White";
-        Title.writeDocTitle(colorWin + " player won!");
-        Title.writeDocSubTitle("Congratulations.");
+        Title.annonceGameEnd();
     }
 }
 

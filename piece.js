@@ -1,26 +1,4 @@
 
-
-const pieceDisplay = {
-    NORMAL: "normal",
-    //GLOW: "glow",
-    INVISIBLE: "invisible",
-    ON_CURSOR: "onCursur",
-}
-
-const preFixImgDisplay = {
-    CUT: "cut-"
-}
-
-const pieceColorCode = {
-    WHITE: 'w',
-    BLACK: 'b'
-}
-
-const pieceTypeCode = {
-    PAWN: "Pawn",
-    KING: "King"
-}
-
 class Piece {
     constructor(isWhite, isKing = false, display = pieceDisplay.NORMAL) {
         this.isWhite = isWhite;
@@ -32,29 +10,29 @@ class Piece {
         return new Piece(this.isWhite, this.isKing, newDisplay);
     }
 
-    get colorCode() {
-        return this.isWhite ? pieceColorCode.WHITE : pieceColorCode.BLACK;
-    }
-
-    get typeCode() { 
-        return this.isKing ? pieceTypeCode.KING : pieceTypeCode.PAWN;
-    }
-
     get pieceCode() {
-        return this.colorCode + this.typeCode;
+        if (this.isWhite) {
+            if (this.isKing)
+                return imgsUrl.PIECE_CODE.WHITE_KING;
+            return imgsUrl.PIECE_CODE.WHITE_PAWN;
+        }
+        if (this.isKing)
+            return imgsUrl.PIECE_CODE.BLACK_KING;
+        return imgsUrl.PIECE_CODE.BLACK_PAWN;
     }
 
     get imageURL() {
-        let url = imgsFolderName +'/';
+        let url = imgsUrl.FOLDER_NAME;
         switch (this.display) {
             case pieceDisplay.INVISIBLE:
-                return darkTileUrl;
-            /* case pieceDisplay.GLOW:
-                url += "glow-"; */
+                return imgsUrl.DARK_TILE;
+            case pieceDisplay.GLOW:
+                url += imgsUrl.PIECE_DISPLAY.GLOW;
+                break;
             case pieceDisplay.ON_CURSOR:
-                url += preFixImgDisplay.CUT;
+                url += imgsUrl.PIECE_DISPLAY.CUT;
         }
-        url += this.pieceCode + pieceImgsUrlSuffix;
+        url += this.pieceCode + imgsUrl.PIECE_SUFFIX;
         return url;
     }
 }

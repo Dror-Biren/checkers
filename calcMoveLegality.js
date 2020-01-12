@@ -2,17 +2,15 @@ let CalcMoveLegality = {};
 
 CalcMoveLegality.getFirstStepMoveLegality = function (hypothClicked = clicked) {
     if (!hypothClicked.tile.pieceOnTile)
-        return new IllegalMove("This tile is empty." +
-            "\nYou need to choose a tile that contain a piece in your color.");
+        return new IllegalMove(messages.ERROR.EMPTY_TILE);
     if (hypothClicked.tile.pieceOnTile.isWhite !== isWhiteTurn)
-        return new IllegalMove("You can only move a piece in your color.");
+        return new IllegalMove(messages.ERROR.WRONG_COLOR_PIECE);
     return new LegalFirstStepMove();
 }
 
 CalcMoveLegality.getSecondStepMoveLegality = function (hypothClicked = clicked) {
     if (hypothClicked.tile.pieceOnTile)
-        return new IllegalMove("This tile is occupied. \n" +
-            "You need to move to an empty tile.");
+        return new IllegalMove(messages.ERROR.OCCUPIED_TILE);
     let deltaColumn = Math.abs(hypothClicked.tile.realColumnOfBoard - hypothClicked.prvTile.realColumnOfBoard);
     var deltaRow;
     setDeltaRow();
@@ -24,27 +22,25 @@ CalcMoveLegality.getSecondStepMoveLegality = function (hypothClicked = clicked) 
             deltaRow = Math.abs(deltaRow);
     }
     if (deltaRow != deltaColumn)
-        return new IllegalMove("You can only move diagonally forward.");
+        return new IllegalMove(messages.ERROR.NOT_DIAGONALLY);
     if (deltaRow !== 1 && deltaRow !== 2)
-        return new IllegalMove("You can't move that vertical distance.");
+        return new IllegalMove(messages.ERROR.WRONG_VERTICAL);
     if (deltaColumn !== 1 && deltaColumn !== 2)
-        return new IllegalMove("You can't move that horizontal distance.");
+        return new IllegalMove(messages.ERROR.WRONG_HORIZONTAL);
 
     if (deltaRow === 2)
         return CalcMoveLegality.getAttemptCaptureLegality(hypothClicked);
 
     if (isCapturePossible)
-        return new IllegalMove("When you can capture, you must capture.");
+        return new IllegalMove(messages.ERROR.MUST_CAPTURE);
 
     return new LegalSecondStepMove(null);
 }
 
 CalcMoveLegality.getAttemptCaptureLegality = function (hypothClicked) {
     let tileBetween = CalcMoveLegality.getTileBetweenTiles(hypothClicked.tile, hypothClicked.prvTile);
-    if (tileBetween.isEmpty)
-        return new IllegalMove("You can't move a double move unless you capture.");
-    if (isWhiteTurn === tileBetween.pieceOnTile.isWhite)
-        return new IllegalMove("You can capture only a piece of your color.");
+    if (tileBetween.isEmpty || isWhiteTurn === tileBetween.pieceOnTile.isWhite)
+        return new IllegalMove(messages.ERROR.WRONG_VERTICAL);
 
     return new LegalSecondStepMove(tileBetween);
 }

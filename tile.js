@@ -49,7 +49,7 @@ class Tile {
 
     get imageURL() {
         if (this.isEmpty)
-            return "Images/dark-tile.jpg";
+            return imgsUrl.DARK_TILE;
         return this.pieceOnTile.imageURL;
 
     }

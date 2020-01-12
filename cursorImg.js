@@ -12,14 +12,9 @@ CursorImg.resetImgOnCursor = function () {
 }
 
 CursorImg.setImgPositionToCursor = function (event) {
-    imgOnCursor.style.top = (event.clientY - imgOnCursorSize.height / 2) + "px";
-    imgOnCursor.style.left = (event.clientX - imgOnCursorSize.width / 2) + "px";
-}
-
-CursorImg.updateImgOnCursorSize = function ()
-{
-    imgOnCursor.style.height = imgOnCursor.style.width = board[0][0].htmlElement.offsetWidth+"px";
-    ({width: imgOnCursorSize.width, height: imgOnCursorSize.height } = imgOnCursor.getBoundingClientRect());
+    let imgOnCursorSize = board[0][0].htmlElement.offsetWidth;
+    imgOnCursor.style.top = (event.clientY - imgOnCursorSize / 2) + "px";
+    imgOnCursor.style.left = (event.clientX - imgOnCursorSize / 2) + "px";
 }
 
 CursorImg.setImgOnCursorToTileContent = function(tile) {
@@ -32,5 +27,5 @@ CursorImg.setImgOnCursorToTileContent = function(tile) {
     let pieceOnCursor = tile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.ON_CURSOR);
     imgOnCursor.src = pieceOnCursor.imageURL;
     imgOnCursor.style.visibility = "visible";
-    CursorImg.updateImgOnCursorSize();      
+    imgOnCursor.style.height = imgOnCursor.style.width = board[0][0].htmlElement.offsetWidth+"px";     
 }

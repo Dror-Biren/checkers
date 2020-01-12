@@ -1,39 +1,31 @@
 let PrepareGame = {};
 
-
-
 PrepareGame.prepareGame = function() {
     CursorImg.resetImgOnCursor();
     PrepareGame.creatAllImages();
     PrepareGame.resetGame();
-    CursorImg.updateImgOnCursorSize();
 }
 
 PrepareGame.creatAllImages = function() {
     for (let row = 0; row < boardHeight; row++)
-        for (let column = 0; column < boardWidth; column++) {
+        for (let column = 0; column < boardWidth; column++) {           
+            
             let tileImg = document.createElement("img");
             tileImg.style.float = "left";
-
-            //let lineOfCode = `<img style="float: left" width='' height='' `;
-
-            let columnInDataStruct = Math.floor(column / 2);
-            let id = '' + row + columnInDataStruct;
-            if ((row + column) % 2 === 0) {
-                //id='empty-${id}'
-                 //lineOfCode += `src='Images/light-tile.jpg' > `;
-                 tileImg.src = "Images/light-tile.jpg";
-                 console.log(tileImg.src);
-                 tileImg.id = id; 
-            }
+            if ((row + column) % 2 === 0) 
+                tileImg.src = imgsUrl.LIGHT_TILE;
+                //id='empty-${id}'          
             else {
-                //lineOfCode += `id='${id}' class='darkTile' onmousedown='Index.tileWasClicked("${id}")';
-                //onmouseup='Index.tileWasClicked("${id}");'> `;
+                let columnInDataStruct = Math.floor(column / 2);
+                let id = '' + row + columnInDataStruct;
+                tileImg.setAttribute("class", "darkTile");
+                tileImg.setAttribute("id", id);
+                tileImg.setAttribute("onmousedown", `Index.tileWasClicked("${id}")`);
+                tileImg.setAttribute("onmouseup", `Index.tileWasClicked("${id}")`);
             }
             document.getElementById("board").appendChild(tileImg);
         }
-
-    
+    //console.log(document.getElementById("board"));
 }
 
 PrepareGame.resetGame = function() {
@@ -43,8 +35,7 @@ PrepareGame.resetGame = function() {
     imgOnCursor.style.visibility = "hidden";
     document.body.style.cursor = "grab";
     new Tile(null, null, null).enableAllTilesPointEventExceptThis();
-    Title.writeDocTitle("White player: you start!");
-    Title.writeDocSubTitle("Please select a piece to move with");
+    Title.annonceGameStart();
     PrepareGame.setBoardToStartingPosition();
     //console.log(Index);
     Index.updateBoardDisplay();

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CHECKERS WORLD OF DROR</title>
+    <link rel="stylesheet" type="text/css" href="styles/all-files.css">
+    <link rel="stylesheet" type="text/css" href="styles/entering.css">
+
+</head>
+
+<body>
+    <div id="menu">
+        <h1 id="small">Welcome to the</h1>
+        <h1>Dror's world of checkers</h1>
+        <div id=buttons>
+            <div class='menuButton' onclick="shiftPageAndPreserveToken('game')">
+                <p>start new game</p>
+            </div>
+
+            <div class='menuButton' onclick="window.open('https://en.wikipedia.org/wiki/English_draughts')">
+                <p>game-rules</p>
+            </div>
+
+            <div class='menuButton' onclick="shiftPageAndPreserveToken('index','')">
+                    <p>log-out</p>
+            </div>
+        </div>
+    </div>
+
+    <div onclick="printAllUsers()">
+        <p>(for test only: log to console all users)</p>
+    </div>
+    <div onclick="window.open('game.html?')">
+        <p>(for test only: start new game in new tab)</p>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="website-js/tokenHandler.js"></script>
+    <script src="website-js/mainPage.js"></script>
+</body>
+
+</html>

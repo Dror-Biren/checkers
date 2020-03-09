@@ -1,12 +1,3 @@
-
-body {
-    background-image: url("Images/background5.jpg");
-    background-position: 0 0;
-    background-size: cover;
-    background-repeat: no-repeat;
-    /* background-size: 100% 115%; */
-}
-
 div#board {
     width: 70vmin;
     margin-left: 6%;
@@ -22,16 +13,6 @@ img {
     img.darkTile:hover {
         filter: hue-rotate(-70deg);
     }
-/*
-    img.darkTile:hover {
-        cursor: grab;
-    }
-
-
-    img.darkTile {
-        cursor: grabbing;
-    }
-*/
 
 
 #imgOnCursor {
@@ -60,49 +41,44 @@ div#menu {
     width: 12%;
     height: 60%;
     float: left;
-    display: inline;
+    display: grid;
     padding-top: 19vmin;
     padding-left: 4%;
     padding-right: 4%;
 }
 
+.userData {
+    width: 10vw;
+    height: 10vw;
+    font-size: 1.5vw;
+    text-align: center;
+    font-weight: 400;
+    font-family: Andale Mono, monospace;
+    border: 1px solid black
+}
+
+.whitePlayer {
+    background-color: rgb(231, 231, 231);
+    color: rgb(32, 32, 32)
+}
+
+.blackPlayer {
+    background-color: rgb(32, 32, 32);
+    color: rgb(231, 231, 231)
+}
+
 .menuButton {
     font-size: 2.5vmin;
-    font-family: Andale Mono, monospace;
     width: 11vmin;
     height: 3vmin;
-    color: darkslategray;
-    background-color: wheat;
     margin-bottom: 12%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     padding: 16%;
-    border: 0.5vmin groove Peru;
     border-radius: 30%;
 }
 
     .menuButton:hover {
         font-size: 2.8vmin;
         font-weight: 900;
-        background-color: lightpink;
-        cursor: pointer;
         width: 13vmin;
         height: 5vmin;
-        border: 0.5vmin groove saddlebrown;
     }
-
-    .menuButton:active {
-        background-color: indianred;
-    }
-
-
-/*
-    .alert {
-        padding: 20px;
-        background-color: #f44336; // Red 
-        color: white;
-        margin-bottom: 15px;
-    }
-*/

@@ -13,19 +13,18 @@ PrepareGame.creatAllImages = function() {
             let tileImg = document.createElement("img");
             tileImg.style.float = "left";
             if ((row + column) % 2 === 0) 
-                tileImg.src = imgsUrl.LIGHT_TILE;
-                //id='empty-${id}'          
+                tileImg.src = imgsUrl.LIGHT_TILE;         
             else {
                 let columnInDataStruct = Math.floor(column / 2);
                 let id = '' + row + columnInDataStruct;
+                let params = row + ',' + columnInDataStruct;
                 tileImg.setAttribute("class", "darkTile");
                 tileImg.setAttribute("id", id);
-                tileImg.setAttribute("onmousedown", `Index.tileWasClicked("${id}")`);
-                tileImg.setAttribute("onmouseup", `Index.tileWasClicked("${id}")`);
+                tileImg.setAttribute("onmousedown", `RunGame.tileWasClicked(${params})`);
+                tileImg.setAttribute("onmouseup", `RunGame.tileWasClicked(${params})`);
             }
             document.getElementById("board").appendChild(tileImg);
         }
-    //console.log(document.getElementById("board"));
 }
 
 PrepareGame.resetGame = function() {
@@ -35,10 +34,10 @@ PrepareGame.resetGame = function() {
     imgOnCursor.style.visibility = "hidden";
     document.body.style.cursor = "grab";
     new Tile(null, null, null).enableAllTilesPointEventExceptThis();
-    Title.annonceGameStart();
+    Title.waitingToMatch();
     PrepareGame.setBoardToStartingPosition();
-    //console.log(Index);
-    Index.updateBoardDisplay();
+    //console.log(RunGame);
+    RunGame.updateBoardDisplay();
     //alert("Let's play checkers!");
 }
 
@@ -87,7 +86,6 @@ PrepareGame.setBoardToStartingPosition = function() {
             break;
     }
     PrepareGame.setRealBoardByCodeBoard(boardInCharsCode);
-    
 }
 
 PrepareGame.setRealBoardByCodeBoard = function(codeBoard) {

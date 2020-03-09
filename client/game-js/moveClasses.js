@@ -10,7 +10,7 @@ class IllegalMove {
         alert(messages.ERROR.ALERT_START + this.message);
     }
 
-   setTurnToFirstStep = function() {
+    setTurnToFirstStep = function() {
         imgOnCursor.style.visibility = "hidden";
         prvMovingPiece.display = pieceDisplay.GLOW;
         if (isFirstStepOfTurn)
@@ -19,7 +19,7 @@ class IllegalMove {
         document.body.style.cursor = "grab";    
         clicked.prvTile.pieceOnTile = 
             clicked.prvTile.pieceOnTile.copyPieceWithNewDisplay(pieceDisplay.NORMAL);
-        Index.updateBoardDisplay();
+        RunGame.updateBoardDisplay();
         isFirstStepOfTurn = true;
     }
 }
@@ -28,6 +28,7 @@ class LegalFirstStepMove {
     executStep() {
         if (prvMovingPiece)
             prvMovingPiece.display = pieceDisplay.NORMAL;
+        prvMovingPiece = clicked.tile.pieceOnTile
         clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
         document.body.style.cursor = "grabbing";
         clicked.prvTile = Object.assign(clicked.tile);
@@ -44,8 +45,7 @@ class LegalSecondStepMove {
     executStep() {
         this.executeMovementOnBoard();
         this.setUpForNextTurn();
-        if (!isDoubleCapture)
-        {
+        if (!isDoubleCapture || !isClientTurn()) {
             imgOnCursor.style.visibility = "hidden";
             document.body.style.cursor = "grab";
         }
@@ -65,13 +65,14 @@ class LegalSecondStepMove {
             isCapturePossible = isDoubleCapture = false;
             isWhiteTurn = !isWhiteTurn;
             if (this.isNoMoreLegalMove())
-                this.endTheGame();
+                RunGame.endTheGame();
             else
                 isCapturePossible = MoveClasses.isCapturePossibleNow();
         }
         else {
             isCapturePossible = isDoubleCapture = true;
-            clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
+            if (isClientTurn())
+                clicked.tile.pieceOnTile.display = pieceDisplay.INVISIBLE;
             clicked.prvTile = clicked.tile;
             CursorImg.setImgOnCursorToTileContent(clicked.tile);
             //clicked.tile.pieceOnTile.display = pieceDisplay.GLOW;
@@ -90,11 +91,6 @@ class LegalSecondStepMove {
 
     isNoMoreLegalMove() {
         return MoveClasses.getAllLegalMoveArr().length === 0;
-    }
-
-    endTheGame() {
-        isGameOver = true;
-        Title.annonceGameEnd();
     }
 }
 

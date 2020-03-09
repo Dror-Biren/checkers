@@ -5,9 +5,7 @@ class Tile {
         this.pieceOnTile = pieceOnTile;
     }
 
-    static getTileByElementId(idString) {
-        let row = idString.charAt(0);
-        let column = idString.charAt(1);
+    static getTileByPosition(row, column) {
         if (isBoardUpsideDown) {
             row = boardHeight - 1 - row;
             column = boardWidth / 2 - 1 - column;
@@ -15,11 +13,9 @@ class Tile {
         return board[row][column];
     }
 
-    enableAllTilesPointEventExceptThis()
-    {
-        for (let tile of board.flat())
-        {
-            let pointEventStatus = (tile === this? "none" : "auto");
+    enableAllTilesPointEventExceptThis() {
+        for (let tile of board.flat()) {
+            let pointEventStatus = (tile === this ? "none" : "auto");
             tile.htmlElement.style.pointerEvents = pointEventStatus;
         }
     }
@@ -32,12 +28,6 @@ class Tile {
         }
         return document.getElementById('' + displayRow + displayColumn);
     }
-
-    /*
-    get nextEmptyTileHtmlElement() {
-        return document.getElementById('empty-' + this.row + this.column);
-    }
-    */
 
     get realColumnOfBoard() {
         return 2 * this.column + 1 - this.row % 2;

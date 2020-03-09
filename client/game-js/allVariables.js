@@ -1,9 +1,16 @@
+
+let client
+let opponent
+let isClientWhite = true;
+const isClientTurn = () => isClientWhite === isWhiteTurn;
+
 let board = [];
 let clicked = { tile: null, prvTile: null };
 let prvMovingPiece;
 
 let isWhiteTurn;
 let isFirstStepOfTurn;
+let isGameStart;
 let isGameOver;
 let isBoardUpsideDown;
 let isCapturePossible;
@@ -13,14 +20,13 @@ let imgOnCursor;
 
 
 
-const beginInPositionNum = 0;
+const beginInPositionNum = 3;
 const boardHeight = 8 , boardWidth = 8;
-const whitePlayerName = "White player", blackPlayerName = "Black player";
 
 const imgsUrl = {
-    FOLDER_NAME: "Images/",
-    DARK_TILE: "Images/dark-tile.jpg",
-    LIGHT_TILE: "Images/light-tile.jpg",
+    FOLDER_NAME: "../Images/",
+    DARK_TILE: "../Images/dark-tile.jpg",
+    LIGHT_TILE: "../Images/light-tile.jpg",
     PIECE_DISPLAY: {
         CUT: "cut-",
         GLOW: "glow-"
@@ -42,9 +48,20 @@ const pieceDisplay = {
 }
 
 const messages = {
-    STARTING_PLAYER: ": you start!",
-    ANNONCE_WINNING_PLAYER: " have won!",
-    AFTER_WIN: "Congratulations.",
+    BEFORE_GAME: "Waiting for a match",
+    BEFORE_GAME_SUB: (dotsAmount) => "looking for user who wants to play" +".".repeat(dotsAmount),
+    STARTING_WHITE: "You got the white pieces",
+    STARTING_BLACK: "You got the black pieces",
+    WIN: "You have won!",
+    WIN_SUB: "Congratulations.",
+    WIN_TECHNICALY: "You have won! (technicaly)",
+    WIN_TECHNICALY_SUB: "your opponent has left the game",
+    LOSE: "You have lost!",
+    LOSE_SUB: "Sorry...",
+
+    OPPONENT_TURN: "Opponent turn",
+    OPPONENT_TURN_SUB: (dotsAmount) => "waiting for opponent" + ".".repeat(dotsAmount),
+    CLIENT_TURN: "Your turn",
     POLITE_OPEN: "Please ",
     FIRST_STEP: "select a piece to move with",
     FIRST_STEP_WITH_CAPTURE: "select a piece to capture with",
@@ -54,6 +71,8 @@ const messages = {
         INSTRUCTION: "- Please try again:",
         ALERT_START: "Error!\n",
 
+        OPENING_PARALLEL_GAMES: "You can't open multiple games in parallel",
+        NOT_CLIENT_TURN: "Wait... It's not your turn yet.",
         WRONG_COLOR_PIECE: "You can only move a piece in your color.",
         EMPTY_TILE: "This tile is empty.\n"
                     + "You need to choose a tile that contain a piece in your color.",

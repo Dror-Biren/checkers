@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CHECKERS WORLD OF DROR</title>
+    <link rel="stylesheet" type="text/css" href="styles/all-files.css">
+    <link rel="stylesheet" type="text/css" href="styles/entering.css">
+
+</head>
+
+<body>
+    <div id="menu">
+        <h1 id="small">Welcome to the</h1>
+        <h1>Dror's world of checkers</h1>
+
+        <div class="form">
+            <h2>SIGN-UP</h2>
+            <form>
+                <label>user-name:</label>
+                <input type="text" name="username" placeholder="choose your username" required>
+                <br>
+                <label>password:</label>
+                <input type="text" name="password" placeholder="choose your password" required>
+                <br>
+                <label>confirm password:</label>
+                <input type="text" name="confirmPassword" placeholder="repeat your password" required>
+                <br>
+                <label>email:</label>
+                <input type="text" name="email" placeholder="your email here" required>
+                <br>
+                <button type="button" id="menuButton" onclick="submitForm('signUp')">send</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="website-js/tokenHandler.js"></script>
+    <script src="website-js/submitForms.js"></script>
+</body>
+
+</html>

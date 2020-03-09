@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CHECKERS WORLD OF DROR</title>
+    <link rel="stylesheet" type="text/css" href="styles/all-files.css">
+    <link rel="stylesheet" type="text/css" href="styles/entering.css">
+
+</head>
+
+<body>
+    <div id="menu">
+        <h1 id="small">Welcome to the</h1>
+        <h1>Dror's world of checkers</h1>
+        <div id=buttons>
+            <div class='menuButton' onclick="shiftPageAndPreserveToken('signUp')">
+                <p>Sign-up</p>
+            </div>
+
+            <div class='menuButton' onclick="shiftPageAndPreserveToken('logIn')">
+                <p>Log-in</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="website-js/tokenHandler.js"></script>
+</body>
+
+</html>
